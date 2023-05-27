@@ -1,16 +1,14 @@
-import { Component } from 'react';
-import scss from './button.module.scss'
+import scss from './button.module.scss';
 
-
-class Button extends Component {
-
-  handleClick = (e) => {
-    this.props.onClick(e);
-  }
-  
-  render() {
-    return <button className={scss.button} onClick={this.handleClick}>Load more</button>;
-  }
-}
+const Button = ({ onClick }) => {
+  const handleClick = e => {
+    onClick(e);
+    return (
+      <button className={scss.button} onClick={handleClick}>
+        Load more
+      </button>
+    );
+  };
+};
 
 export default Button;

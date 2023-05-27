@@ -1,22 +1,18 @@
-import { Component } from 'react';
 import scss from './imageGalleryItem.module.scss';
 import PropTypes from 'prop-types';
 
-class ImageGalleryItem extends Component {
-  handleClick = () => {
-    this.props.openModal(this.props.imageSrc);
+const ImageGalleryItem = ({ openModal, imageName, imageUrl, imageSrc }) => {
+  const handleClick = () => {
+    openModal(imageSrc);
   };
-
-  render() {
-    return (
-      <>
-        <li className={scss.galleryItem} onClick={this.handleClick}>
-          <img className={scss.img} src={this.props.imageUrl} alt={this.props.imageName} />
-        </li>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <li className={scss.galleryItem} onClick={handleClick}>
+        <img className={scss.img} src={imageUrl} alt={imageName} />
+      </li>
+    </>
+  );
+};
 
 export default ImageGalleryItem;
 ImageGalleryItem.propTypes = {

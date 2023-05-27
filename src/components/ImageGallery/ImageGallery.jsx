@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import scss from './imageGallery.module.scss';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
@@ -7,85 +7,85 @@ import { fetchPhotos } from '../../api.js';
 import Button from 'components/Button/Button';
 import PropTypes from 'prop-types';
 
-class ImageGallery extends Component {
-  state = {
-    images: [],
-    error: '',
-    showSpinner: false,
-    isModalOpen: false,
-    imageSrc: null,
-    page: 1,
+const ImageGallery = ({ searchName }) => {
+  const [images, setImages] = useState([]);
+  const [error, setError] = useState('');
+  const [showSpinner, setshowSpinner] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalHits, setTotalHits] = useState(0);
+
+  const openModal = src => {
+    setIsModalOpen(true);
+    setImageSrc(src);
   };
 
-  openModal = src => this.setState({ isModalOpen: true, imageSrc: src });
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setImageSrc(null);
+  };
 
-  handleCloseModal = () =>
-    this.setState({ isModalOpen: false, imageSrc: null });
-
-  getImages = async () => {
-    this.setState({ showSpinner: true, error: '' });
+  const getImages = async () => {
+    setshowSpinner(true);
+    setError('');
     try {
-      const images = await fetchPhotos(this.props.searchName, this.state.page);
-      if (!images?.totalHits) {
-        this.setState({
-          error:
-            'Sorry, there are no images matching your search query. Please try again.',
-        });
+      const result = await fetchPhotos(searchName, page);
+      if (!result?.totalHits) {
+        setError(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
       }
 
-      images?.hits &&
-        this.setState({
-          images: [...this.state.images, ...images.hits],
-          totalHits: images.totalHits,
-          page: this.state.page + 1,
-        });
+      if (result?.hits) {
+        setImages([...images, ...result.hits]);
+        setTotalHits(result.totalHits);
+        setPage(page + 1);
+      }
     } catch (error) {
-      this.setState({ error: 'Server error' });
+      console.log(error);
+      setError('Server error');
     } finally {
-      this.setState({ showSpinner: false });
+      setshowSpinner(false);
     }
   };
+  useEffect(() => {
+    setPage(1);
+    setImages([]);
+  }, [searchName]);
 
-  async componentDidUpdate(prevProps) {
-    const { searchName } = this.props;
-
-    if (prevProps.searchName !== searchName) {
-      this.setState({page: 1, images: []}, () => this.getImages(this.state.page));
+  useEffect(() => {
+    if (searchName && page === 1) {
+      getImages(page);
     }
-  }
-  render() {
-    const { images, error, showSpinner, isModalOpen, totalHits, imageSrc } = this.state;
- 
-      return (
-      <div className={scss.wrapper}>
-        {error && <p className={scss.message}>{error}</p>}
-        {showSpinner && <Loader />}
-        {images.length > 0 && (
-          <ul className={scss.gallery}>
-            {images.map(image => {
-              return (
-                <ImageGalleryItem
-                  openModal={this.openModal}
-                  key={image.id}
-                  imageUrl={image.webformatURL}
-                  imageSrc={image.largeImageURL}
-                  imageName={image.tags}
-                />
-              );
-            })}
-          </ul>
-        )}
-        {images?.length > 0 && totalHits > images.length && <Button onClick={this.getImages} />}
-        {isModalOpen && (
-          <Modal
-            modalUrl={imageSrc}
-            onClose={this.handleCloseModal}
-          />
-        )}
-      </div>
-    );
-  }
-}
+  }, [page, searchName]);
+
+  return (
+    <div className={scss.wrapper}>
+      {error && <p className={scss.message}>{error}</p>}
+      {showSpinner && <Loader />}
+      {images.length > 0 && (
+        <ul className={scss.gallery}>
+          {images.map(image => {
+            return (
+              <ImageGalleryItem
+                openModal={openModal}
+                key={image.id}
+                imageUrl={image.webformatURL}
+                imageSrc={image.largeImageURL}
+                imageName={image.tags}
+              />
+            );
+          })}
+        </ul>
+      )}
+      {images?.length > 0 && totalHits > images.length && (
+        <Button onClick={getImages} />
+      )}
+      {isModalOpen && <Modal modalUrl={imageSrc} onClose={handleCloseModal} />}
+    </div>
+  );
+};
 
 export default ImageGallery;
 ImageGallery.propTypes = {
