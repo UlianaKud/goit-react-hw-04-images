@@ -58,6 +58,7 @@ const ImageGallery = ({ searchName }) => {
     if (searchName && page === 1) {
       getImages(page);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, searchName]);
 
   return (

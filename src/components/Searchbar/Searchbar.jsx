@@ -5,7 +5,6 @@ import scss from './searchbar.module.scss';
 
 const Searchbar = ({ onSubmit }) => {
   const [inputData, setInputData] = useState('');
-  const [showSpinner, setshowSpinner] = useState(false);
 
   const handleChange = evt => {
     const { value } = evt.target;
@@ -14,7 +13,6 @@ const Searchbar = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    setshowSpinner(true);
     if (!inputData.trim('')) {
       Notiflix.Notify.failure('Oops, request is empty');
       return;

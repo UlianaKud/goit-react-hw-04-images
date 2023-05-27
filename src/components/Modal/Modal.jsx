@@ -3,18 +3,18 @@ import scss from './modal.module.scss';
 import PropTypes from 'prop-types';
 
 const Modal = ({ onClose, modalUrl }) => {
-  const handleKeyDown = e => {
-    console.log('handleKeyDown');
-    if (e.key === 'Escape') {
-      onClose();
-    }
-  };
-
   useEffect(() => {
+    const handleKeyDown = e => {
+      console.log('handleKeyDown');
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClose = e => {
