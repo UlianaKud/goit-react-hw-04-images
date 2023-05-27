@@ -1,0 +1,15 @@
+.button {
+  width: 150px;
+  height: 40px;
+  background-color: rgb(31, 84, 145);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover,
+  &:focus {
+    background-color: rgb(12, 34, 59);
+  }
+}

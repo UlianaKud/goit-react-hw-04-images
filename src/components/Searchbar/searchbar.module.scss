@@ -1,0 +1,38 @@
+.searchbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  background-color: rgb(31, 84, 145);
+}
+.form {
+  position: relative;
+  display: flex;
+  height: 50%;
+  width: 400px;
+}
+.input {
+  width: 100%;
+  padding: 2px;
+  padding-left: 36px;
+  border: none;
+  outline: none;
+  transition-property: outline;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover,
+  &:focus {
+    outline: 2px solid rgb(192, 190, 75);
+    border: none;
+  }
+}
+.button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  height: 30px;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}
